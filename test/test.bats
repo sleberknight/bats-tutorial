@@ -1,4 +1,7 @@
 setup() {
+    load 'test_helper/bats-support/load'
+    load 'test_helper/bats-assert/load'
+
     # get the containing directory of this file
     # use $BATS_TEST_FILENAME instead of ${BASH_SOURCE[0]} or $0,
     # as those will point to the bats executable's location or the preprocessed file respectively
@@ -7,8 +10,11 @@ setup() {
     PATH="$DIR/../src:$PATH"
 }
 
+get_projectsh_welcome_message() {
+    project.sh  2>&1 | grep Welcome
+}
+
 @test "can run our script" {
-    # notice the missing ./
-    # As we added src/ to $PATH, we can omit the relative path to `src/project.sh`.
-    project.sh
+    run get_projectsh_welcome_message
+    assert_output 'Welcome to our project!'
 }
